@@ -26,7 +26,8 @@ void test_fork(){
 }
 
 void test_open(){
-	//如果先fork再open就会覆盖，但是先open再fork就不会覆盖
+	//如果先fork再open就会覆盖就是他们都是从最开始开始写入然后打开文件时都会清楚文件内容
+	//，但是先open再fork就不会覆盖
 	pid_t id = fork();
 	int fd = open(FileName, O_CREAT|O_WRONLY|O_TRUNC, 0666);
 	if(id == 0){
@@ -34,7 +35,7 @@ void test_open(){
 		write(fd, message.c_str(), message.size());
 	}else{
 		waitpid(id, NULL, 0);
-		const string message = "I'm parent\n";
+		const string message = "I'm p\n";
 		write(fd, message.c_str(), message.size());
 	}	
 }
