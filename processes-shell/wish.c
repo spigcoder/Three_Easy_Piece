@@ -10,6 +10,7 @@
 
 const int SIZE = 1024;
 const char* DELIM = " \t";
+int WR = 0;
 
 void Exec(const char* command[]){
     pid_t id = fork();
@@ -37,19 +38,25 @@ int SplitCommand(char* buff, char* command[]){
             //输出重定向
             command[j + 1][strlen(command[j+1])] = '\0';
             int fd = open(command[j + 1], O_WRONLY|O_TRUNC|O_CREAT, 0666);
+            dup2(1, 2);
             dup2(fd, 1); 
+            WR = 1;
             command[j] = NULL;
             break;
         }else if(strcmp(command[j], ">>") == 0){
             //追加重定向
             command[j + 1][strlen(command[j+1])] = '\0';
             int fd = open(command[j + 1], O_APPEND|O_WRONLY|O_APPEND, 0666);
+            dup2(1, 2);
             dup2(fd, 1); 
+            WR = 1;
             command[j] = NULL;
             break;
         }else if(strcmp(command[j], "<") == 0){
             command[j + 1][strlen(command[j+1])] = '\0';
             int fd = open(command[j + 1], O_RDONLY, 0666);
+            WR = 2;
+            dup2(0, 2);
             dup2(fd, 0); 
             command[j] = NULL;
             break;
@@ -79,6 +86,12 @@ void Interaction(int flag){
     char* command[SIZE];
     if(!flag){
         while(true){
+            //如果重定向了文件，将这个文件定向回来,还有一种解决方法就是不在父进程进行重定向操作
+            //而是在子进程执行命令时进行重定向操作
+            if(WR){
+                if(WR == 1) dup2(2, 1);
+                else dup2(2, 0);
+            }
             printf("wish> ");
             char* tmp = fgets(buff, SIZE, stdin);
             if(!tmp || strcmp(tmp, "\n") == 0) continue; 

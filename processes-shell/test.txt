@@ -1,5 +1,3 @@
-cat.txt
-command.txt
 Makefile
 README.md
 tests
@@ -7,31 +5,3 @@ test.txt
 test-wish.sh
 wish
 wish.c
-wish> cat.txt
-command.txt
-Makefile
-README.md
-tests
-test.txt
-test-wish.sh
-wish
-wish.c
-wish> cat.txt
-command.txt
-Makefile
-README.md
-tests
-test.txt
-test-wish.sh
-wish
-wish.c
-wish> cat.txt
-command.txt
-Makefile
-README.md
-tests
-test.txt
-test-wish.sh
-wish
-wish.c
-wish> 
